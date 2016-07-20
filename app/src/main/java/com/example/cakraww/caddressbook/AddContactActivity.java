@@ -1,18 +1,11 @@
 package com.example.cakraww.caddressbook;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import static com.example.cakraww.caddressbook.CAddressBookContract.COL_COMPANY;
-import static com.example.cakraww.caddressbook.CAddressBookContract.COL_NAME;
-import static com.example.cakraww.caddressbook.CAddressBookContract.COL_PHONE;
-import static com.example.cakraww.caddressbook.CAddressBookContract.TABLE_NAME;
 
 public class AddContactActivity extends AppCompatActivity {
 
@@ -21,7 +14,7 @@ public class AddContactActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact);
 
-        DbHelper dbHelper = new DbHelper(this);
+        DataSource dbHelper = new ServerDataSource(this);
 
         EditText nameField = (EditText) findViewById(R.id.name_field);
         EditText phoneField = (EditText) findViewById(R.id.phone_field);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Contact> contacts;
     private ArrayAdapter<Contact> adapter;
-    private DbHelper dbHelper;
+    private DataSource dataSource;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -39,9 +40,19 @@ public class MainActivity extends AppCompatActivity {
             case R.id.add_contact:
                 startAddContactActivity();
                 return true;
+            case R.id.refresh_contacts:
+                refreshContacts();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void refreshContacts() {
+        contacts = dataSource.getContacts();
+        adapter.clear();
+        adapter.addAll(contacts);
+        adapter.notifyDataSetChanged();
     }
 
     private void startAddContactActivity() {
@@ -54,9 +65,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dbHelper = new DbHelper(this);
 
-        contacts = dbHelper.getContacts();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+
+//        dataSource = new DbDataSource(this);
+        dataSource = new ServerDataSource(this);
+
+        contacts = dataSource.getContacts();
 
         ListView contactList = (ListView) findViewById(R.id.contact_list);
 
@@ -96,9 +113,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        contacts = dbHelper.getContacts();
-        adapter.clear();
-        adapter.addAll(contacts);
-        adapter.notifyDataSetChanged();
+        refreshContacts();
     }
 }

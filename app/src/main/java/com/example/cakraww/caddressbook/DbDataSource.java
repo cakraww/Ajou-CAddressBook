@@ -17,14 +17,14 @@ import static com.example.cakraww.caddressbook.CAddressBookContract.TABLE_NAME;
 /**
  * Created by cakraww on 7/15/16.
  */
-public class DbHelper extends SQLiteOpenHelper {
+public class DbDataSource extends SQLiteOpenHelper implements DataSource {
     private static final int DB_VERSION = 1;
     private static final String DB_NAME = "caddressbook.db";
     private static final String SQL_CREATE_ENTRIES = String.format("CREATE TABLE %s(%s VARCHAR(100) PRIMARY KEY, %s VARCHAR(30) NOT NULL, %s VARCHAR(100))", TABLE_NAME, COL_NAME, COL_PHONE, COL_COMPANY);
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE contacts";
 
 
-    public DbHelper(Context context) {
+    public DbDataSource(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
@@ -39,6 +39,7 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    @Override
     public List<Contact> getContacts() {
         List<Contact> contacts = new ArrayList<>();
 //                Arrays.asList(
@@ -64,6 +65,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return contacts;
     }
 
+    @Override
     public long insertContact(String name, String phone, String company) {
         ContentValues values = new ContentValues();
         values.put(COL_NAME, name);

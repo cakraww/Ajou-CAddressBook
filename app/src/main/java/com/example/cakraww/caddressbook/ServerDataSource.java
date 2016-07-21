@@ -26,10 +26,12 @@ public class ServerDataSource implements DataSource {
 
     public ServerDataSource(Context context) {
         this.context = context;
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
     }
 
     @Override
-    public long insertContact(String name, String phone, String company) {
+    public long insertContact(String name, String phone, String company, CAddressBookContract.Category category) {
         RequestParams params = new RequestParams();
         params.put("name", name);
         params.put("phone", phone);
@@ -39,7 +41,7 @@ public class ServerDataSource implements DataSource {
     }
 
     @Override
-    public List<Contact> getContacts() {
+    public List<Contact> getContacts(CAddressBookContract.Category category) {
         List<Contact> contacts = new ArrayList<>();
         client.get(API_URL, new JsonHttpResponseHandler() {
             @Override
